@@ -1,0 +1,257 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	background-color:#333;
+	background-repeat:no-repeat;
+	background-size:cover;
+}
+
+a{
+	text-decoration: none
+}
+
+#tree{
+	position: absolute;
+	top: 11px;
+	left: 24%;
+}
+
+#chet{
+	position: absolute;
+	top: 33px;
+	right: 27%;
+}
+
+#head{
+	font-family:幼圆;
+	color:#000;
+	text-align:center;
+	width:100%;
+	height:170px;
+	position:relative;
+	background-color:#FFF;
+	border-color:#003;
+	border:outset;
+	border:thick;
+	border-radius: 40px;
+	overflow:hidden;
+}
+
+#buttonm1{
+	height:32px;
+	width:6%;
+	font-size:15px;
+	color:#FFF;
+	text-align:center;
+    background: #333;
+	border-radius: 15px;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+	margin-bottom:0.5%;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	margin-left:43.5%;
+	margin-right:1%;
+	float:left;
+	top:0px;
+}
+
+#buttonm2{
+	height:32px;
+	width:6%;
+	font-size:15px;
+	color:#FFF;
+	text-align:center;
+    background: #333;
+	border-radius: 15px;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+	margin-bottom:0.5%;
+	float:left;
+}
+
+.box{
+	width:100px;
+	height:30px;
+	padding-left:0.7%;
+	padding-right:0.7%;
+	margin-left:10%;
+	margin-bottom:4%;
+	margin-top:1%;
+	text-align:center;
+	font-color:#FFF;
+	font-size:30px;
+	border:outset;
+	border:thick;
+	border-radius:60px;
+}
+
+#box1{
+	position:absolute;
+	left:10px;
+	background-color:#FF8080;
+}
+#box2{
+	position:absolute;
+	left:200px;
+	background-color:#6ABCFF;
+}
+#box3{
+	position:absolute;
+	left:400px;
+	background-color:#F8F287;
+}
+#box4{
+	position:absolute;
+	left:600px;
+	background-color:#83D1A6;
+}
+#box5{
+	position:absolute;
+	left:800px;
+	background-color:#EF67FE;
+}
+
+#test{
+	position:absolute;
+	left:15px;
+	bottom:0px;
+	width:80%;
+	height:13%;
+	background-color:#FFF;
+}
+
+#test2{
+	position:absolute;
+	left:15px;
+	bottom:0px;
+	width:80%;
+	height:10%;
+	background-color:#FFF;
+}
+
+#stage{
+	position:absolute;
+	width:80px;
+	height:80px;	
+	background-color:#FFF;
+	border-radius:600px;
+	right:50px;
+	top:160px;
+	line-height:80px;
+}
+
+#stage2{
+	position:absolute;
+	width:80px;
+	height:80px;	
+	background-color:#FFF;
+	border-radius:600px;
+	right:50px;
+	top:160px;
+	line-height:80px;
+}
+
+#ele1{
+	position:absolute;
+	width:60px;
+	height:60px;	
+	background-color:#FFF;
+	border-radius:600px;
+	right:90px;
+	top:250px;
+	line-height:60px;
+}
+
+#ele2{
+	position:absolute;
+	width:60px;
+	height:60px;	
+	background-color:#FFF;
+	border-radius:600px;
+	right:31px;
+	top:250px;
+	line-height:60px;
+}
+
+input[type="text"] {
+	height:5%;
+	width:15%;
+    font-size:15px;
+	color:#FFF;
+	text-align:center;
+    border-radius: 15px;
+    padding: 5px 10px;
+	margin-top:0.5%;
+    border: 1px solid #ddd;
+    background: #333;
+}
+
+input[type="button"] {
+	height:32px;
+	width:14%;
+	font-size:15px;
+	color:#FFF;
+	text-align:center;
+    background: #333;
+	border-radius: 15px;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+	margin-top:0.5%;
+}
+
+input[type="button"]:hover {
+	background-color:#066;
+	cursor:pointer;
+}
+input[type="button"]:focus {
+    background-color:#F90;
+	cursor:pointer;
+}
+
+input[type="button"]:active {
+    background: #666;
+}
+
+#pos1{
+	width:100%;
+	height:20%;
+	position:relative;
+	overflow:hidden;
+	height:auto;
+	min-height:200px; 
+	margin:0 auto;
+}
+
+#method1{
+	position:relative;
+	width:100%;
+	height:500px;
+	font-family:幼圆;
+	text-align:center;
+	background-color:#333;
+	border: 1px solid #ddd;
+	border-radius: 40px;
+	overflow:hidden;
+	margin-top:2px;
+}
+
+#method2{
+	position:relative;
+	width:100%;
+	height:700px;
+	font-family:幼圆;
+	text-align:center;
+	background-color:#333;
+	border: 1px solid #ddd;
+	border-radius: 40px;
+	overflow:hidden;
+	margin-top:2px;
+}
+
+#canvas{
+	position:absolute;
+	top:80px;
+	border:2px solid #AAA;
+	margin-left:30%;
+}

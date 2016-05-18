@@ -1,0 +1,1708 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Full Permutation</title>
+<link href="style.css" rel="stylesheet">
+<script type="text/JavaScript" src="jquery-1.11.1.min.js"></script>
+<script src="script.js"></script>
+
+
+</head>
+<body>
+
+<div id="head">
+	<h2>全排列算法演示</h2>
+	<img id="tree" src="1.png" width="200px" height="200px" style="display:none"/>
+    <img id="chet" src="2.png" width="150px" height="150px" style="display:none"/>
+  <p><input value="Read Me" id="readme" type="button" onclick="read()"></p>
+    <input value="交换" id="buttonm1" type="button" onclick="m1()">   
+    <input value="回溯" id="buttonm2" type="button" onclick="m2()">
+</div>
+
+<div id="method1" style="display:none">
+<p><input type="text" id="text-box" placeholder="请输入数字个数"></p>
+<input type="text" id="text-box1" placeholder="请输入数字">
+<input type="text" id="text-box2" placeholder="请输入数字">
+<input type="text" id="text-box3" placeholder="请输入数字">
+<input type="text" id="text-box4" placeholder="请输入数字">
+<input type="text" id="text-box5" placeholder="请输入数字">
+<input value="确定" id="button1" type="button" onclick="getnum()">
+<input value="start" id="button2" type="button" onClick="hide1();main();change()">
+<input value="加速" id="button6" type="button" onclick="speedup()" style="width:9%;height:32px">
+<input value="减速" id="button7" type="button" onclick="speeddown()" style="width:9%;height:32px">
+<input value="暂停" id="button12" type="button" onclick="pause()" style="width:9%;height:32px">
+<input value="手动控制模式" id="button10" type="button" onclick="hide2();main()">
+<input value="下一步" id="button11" type="button" onclick="next()">
+
+<p>
+<div id="box1" class="box" style="display:none"></div>
+<div id="box2" class="box" style="display:none"></div>
+<div id="box3" class="box" style="display:none"></div>
+<div id="box4" class="box" style="display:none"></div>
+<div id="box5" class="box" style="display:none"></div>            
+</p>
+<p><div id="test" class="box" style="font-size:20px"></div></p>
+<p><div id="ele1" style="font-size:30px">交</div></p>
+<p><div id="ele2" style="font-size:30px">换</div></p>
+<p><div id="stage" style="font-size:40px">步数</div></p>
+
+</div>
+<script>
+
+
+var num = document.getElementById("text-box").value;
+var number = new Array();
+var step=0;
+var p=0;
+var mark1=new Array();
+var mark2=new Array();
+var time;
+var t;
+var t1;
+t=1024;
+t1=t/2;
+var step1;
+
+function m1(){
+	document.getElementById("method1").style.display="block";
+	document.getElementById("method2").style.display="none";
+	$("#tree").fadeIn(1000);
+	$("#chet").fadeOut(500);
+}
+function m2(){
+	document.getElementById("method1").style.display="none";
+	document.getElementById("method2").style.display="block";
+	$("#tree").fadeOut(500);
+	$("#chet").fadeIn(1000);
+}
+
+function read(){
+	alert("由于数据存在同一个数组，若其中一个算法未结束请不要进行另一个算法；若想进行可以先刷新界面。");
+}
+
+var tflag=1;
+function pause(){
+	if(tflag==1)
+	{
+		
+		t=100000000000000;
+		tflag=0;
+	}
+	else
+	{
+		t=t1*2;
+		tflag=1;
+		change();
+	}
+}
+
+function speedup(){
+	t/=2;
+	t1=t/2;
+}
+function speeddown(){
+	t*=2;
+	t1=t/2;
+}
+
+function getnum(){
+		num=document.getElementById("text-box").value;
+		number[0]=document.getElementById("text-box1").value;
+		document.getElementById("box1").style.display="block";
+		document.getElementById("box1").innerHTML=number[0];
+		if(num==1)return ;
+		number[1]=document.getElementById("text-box2").value;
+		document.getElementById("box2").style.display="block";
+		document.getElementById("box2").innerHTML=number[1];
+		if(num==2)return ;
+		number[2]=document.getElementById("text-box3").value;
+		document.getElementById("box3").style.display="block";
+		document.getElementById("box3").innerHTML=number[2];
+		if(num==3)return ;
+		number[3]=document.getElementById("text-box4").value;
+		document.getElementById("box4").style.display="block";
+		document.getElementById("box4").innerHTML=number[3];
+		if(num==4)return ;
+		number[4]=document.getElementById("text-box5").value;
+		document.getElementById("box5").style.display="block";
+		document.getElementById("box5").innerHTML=number[4];
+		if(num==5)return ;
+}
+
+function swap(i1,i2) {
+        var temp;
+		temp = number[i2];
+        number[i2] = number[i1];
+        number[i1] = temp;
+}
+
+var st1=0;
+function hide1(){
+	if(st1==0)
+	{
+		document.getElementById("button10").style.display="none";
+		document.getElementById("button11").style.display="none";
+		st1=1;
+	}
+	else
+		alert("已经按过一次了哦~会混乱的");
+}
+
+function hide2(){
+	if(st1==0)
+	{
+		document.getElementById("button2").style.display="none";
+		document.getElementById("button6").style.display="none";
+		document.getElementById("button7").style.display="none";
+		document.getElementById("button12").style.display="none";
+		st1=1;
+	}
+	else
+		alert("已经按过一次了哦~会混乱的");
+}
+
+function main(){
+	t1=t/2;
+	fun1(0,num-1);
+}
+
+var bu1=new Array();
+for(bi=0;bi<500;++bi)
+{
+	bu1[bi]=0;
+}
+function fun1(begin,end){
+	var i,j;
+	if(end==begin){
+			step++;      
+			bu1[step]=1;
+			mark1[step]=begin;
+			mark2[step]=begin;
+			return;
+       }
+    else{
+     	for(j=begin;j<=end;j++){    
+            swap(begin,j);
+            step++;   
+			mark1[step]=begin;
+			mark2[step]=j;
+				
+			fun1(begin+1,end);
+
+			swap(begin,j);
+			step++;
+			mark1[step]=begin;
+			mark2[step]=j;
+        }
+	}	
+}
+
+function change(){
+	p++;
+	document.getElementById("stage").innerHTML=p;
+	var i1,i2;
+	var j1=mark1[p];
+	var j2=mark2[p];
+	i1=number[j1];
+	i2=number[j2];
+	document.getElementById("ele1").innerHTML=i1;
+	document.getElementById("ele2").innerHTML=i2;
+	
+	if(bu1[p]==1)
+	{
+		for(ii=0;ii<num;ii++){
+				var r=document.getElementById("test");
+				var node=document.createTextNode(number[ii]);
+				r.appendChild(node);
+			}
+		var node2=document.createTextNode(' ');
+		r.appendChild(node2);
+	}
+	
+	else if(i1==1)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);					
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)
+			{
+			}
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==2)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==3)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==4)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==5)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		}
+	}
+	
+	swap(j1,j2);
+	if(p<step)
+		time=setTimeout("change()",t);	
+}
+
+function next(){
+	t=350;
+	t1=t/2;
+	p++;
+	document.getElementById("stage").innerHTML=p;
+	var i1,i2;
+	var j1=mark1[p];
+	var j2=mark2[p];
+	i1=number[j1];
+	i2=number[j2];
+	var xs=bu1[p];
+	if(xs==1)
+	{
+		
+		for(ii=0;ii<num;ii++){
+				var r=document.getElementById("test");
+				var node=document.createTextNode(number[ii]);
+				r.appendChild(node);
+			}
+		var node2=document.createTextNode(' ');
+		r.appendChild(node2);
+	}
+	if(i1==1)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);					
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)
+			{
+			}
+					
+			if(j2==0)$("#box1").animate({left:'10px'},t1);
+			else if(j2==1)$("#box1").animate({left:'200px'},t1);
+			else if(j2==2)$("#box1").animate({left:'400px'},t1);
+			else if(j2==3)$("#box1").animate({left:'600px'},t1);
+			else if(j2==4)$("#box1").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==2)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box2").animate({left:'10px'},t1);
+			else if(j2==1)$("#box2").animate({left:'200px'},t1);
+			else if(j2==2)$("#box2").animate({left:'400px'},t1);
+			else if(j2==3)$("#box2").animate({left:'600px'},t1);
+			else if(j2==4)$("#box2").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==3)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box3").animate({left:'10px'},t1);
+			else if(j2==1)$("#box3").animate({left:'200px'},t1);
+			else if(j2==2)$("#box3").animate({left:'400px'},t1);
+			else if(j2==3)$("#box3").animate({left:'600px'},t1);
+			else if(j2==4)$("#box3").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==4)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box4").animate({left:'10px'},t1);
+			else if(j2==1)$("#box4").animate({left:'200px'},t1);
+			else if(j2==2)$("#box4").animate({left:'400px'},t1);
+			else if(j2==3)$("#box4").animate({left:'600px'},t1);
+			else if(j2==4)$("#box4").animate({left:'800px'},t1);
+		}
+	}
+	else if(i1==5)
+	{
+		if(i2==1)
+		{	
+			if(j1==0)$("#box1").animate({left:'10px'},t1);
+			else if(j1==1)$("#box1").animate({left:'200px'},t1);
+			else if(j1==2)$("#box1").animate({left:'400px'},t1);
+			else if(j1==3)$("#box1").animate({left:'600px'},t1);
+			else if(j1==4)$("#box1").animate({left:'800px'},t1);
+					
+			if(j2==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		
+		}
+		else if(i2==2)
+		{	
+			if(j1==0)$("#box2").animate({left:'10px'},t1);
+			else if(j1==1)$("#box2").animate({left:'200px'},t1);
+			else if(j1==2)$("#box2").animate({left:'400px'},t1);
+			else if(j1==3)$("#box2").animate({left:'600px'},t1);
+			else if(j1==4)$("#box2").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		}
+		else if(i2==3)
+		{
+			if(j1==0)$("#box3").animate({left:'10px'},t1);
+			else if(j1==1)$("#box3").animate({left:'200px'},t1);
+			else if(j1==2)$("#box3").animate({left:'400px'},t1);
+			else if(j1==3)$("#box3").animate({left:'600px'},t1);
+			else if(j1==4)$("#box3").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+			
+		}
+		else if(i2==4)
+		{
+			if(j1==0)$("#box4").animate({left:'10px'},t1);
+			else if(j1==1)$("#box4").animate({left:'200px'},t1);
+			else if(j1==2)$("#box4").animate({left:'400px'},t1);
+			else if(j1==3)$("#box4").animate({left:'600px'},t1);
+			else if(j1==4)$("#box4").animate({left:'800px'},t1);
+				
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		}
+		else if(i2==5)
+		{
+			if(j1==0)	$("#box5").animate({left:'10px'},t1);
+			else if(j1==1)$("#box5").animate({left:'200px'},t1);
+			else if(j1==2)$("#box5").animate({left:'400px'},t1);
+			else if(j1==3)$("#box5").animate({left:'600px'},t1);
+			else if(j1==4)$("#box5").animate({left:'800px'},t1);
+					
+			if(j2==0)$("#box5").animate({left:'10px'},t1);
+			else if(j2==1)$("#box5").animate({left:'200px'},t1);
+			else if(j2==2)$("#box5").animate({left:'400px'},t1);
+			else if(j2==3)$("#box5").animate({left:'600px'},t1);
+			else if(j2==4)$("#box5").animate({left:'800px'},t1);
+		}
+	}
+	
+	swap(j1,j2);
+}
+</script>
+
+<!--法二-->
+
+<div id="method2" style="display:none">
+
+<input value="使用原数组" id="button3" type="button" onclick="getnum1()" style="width:9%;height:32px">
+<input value="重新输入" id="button4" type="button" onClick="show()" style="width:9%;height:32px">
+
+<input a href="#can" value="start" id="button16" type="button" onClick="hide3();main2();change2()">
+
+<input value="加速" id="button8" type="button" onclick="speedup()" style="width:9%;height:32px">
+<input value="减速" id="button9" type="button" onclick="speeddown()" style="width:9%;height:32px">
+<input value="暂停" id="button13" type="button" onclick="pause2()" style="width:9%;height:32px">
+
+<input value="手动控制模式" id="button14" type="button" onclick="hide4();main2()">
+
+<input value="下一步" id="button15" type="button" onclick="next2()" style="width:9%;height:32px">
+
+<input type="text" id="text-box0" placeholder="请输入数字个数" style="display:none">
+<input type="text" id="text-box6" placeholder="请输入数字" style="display:none">
+<input type="text" id="text-box7" placeholder="请输入数字" style="display:none">
+<input type="text" id="text-box8" placeholder="请输入数字" style="display:none">
+<input type="text" id="text-box9" placeholder="请输入数字" style="display:none">
+<input type="text" id="text-box10" placeholder="请输入数字" style="display:none">
+<input value="确定" id="button5" type="button" onclick="getnum2()" style="display:none">
+
+<p><div id="test2" class="box" style="font-size:20px"></div></p>
+<p><div id="stage2" style="font-size:40px">步数</div></p>
+
+<script>
+
+var flag=0;
+var mark3=new Array();//situation
+var mark4=new Array();//row
+var mark5=new Array();//col
+var tb=new Array();
+var n=new Array();
+var pos=new Array();
+var time2;
+
+for(d=0;d<5;++d)
+{
+	pos[d]=new Array();
+	for(dd=0;dd<5;++dd)
+	{
+		pos[d][dd]=0;
+	}
+}
+var tflag2=1;
+function pause2(){
+	if(tflag2==1)
+	{
+		
+		t=100000000000000;
+		tflag2=0;
+	}
+	else
+	{
+		t=t1*2;
+		tflag2=1;
+		change2();
+	}
+}
+
+var st2=0;
+function hide3(){
+	if(st2==0)
+	{
+		document.getElementById("button14").style.display="none";
+		document.getElementById("button15").style.display="none";
+		st2=1;
+	}
+	else
+		alert("已经按过一次了哦~会混乱的");
+	p=step=0;
+}
+
+function hide4(){
+	if(st2==0)
+	{
+		document.getElementById("button16").style.display="none";
+		document.getElementById("button8").style.display="none";
+		document.getElementById("button9").style.display="none";
+		document.getElementById("button13").style.display="none";
+		st2=1;
+	}
+	else
+		alert("已经按过一次了哦~会混乱的");
+	p=step=0;
+}
+
+function show(){
+	document.getElementById("text-box0").style.display="block";
+	document.getElementById("text-box6").style.display="block";
+	document.getElementById("text-box7").style.display="block";
+	document.getElementById("text-box8").style.display="block";
+	document.getElementById("text-box9").style.display="block";
+	document.getElementById("text-box10").style.display="block";
+	document.getElementById("button5").style.display="block";
+}
+
+function getnum1(){
+		flag=0;
+		p=0;
+		step=0;
+		num = document.getElementById("text-box").value;
+		number[0]=document.getElementById("text-box1").value;
+		if(num==1)return ;
+		number[1]=document.getElementById("text-box2").value;
+		if(num==2)return ;
+		number[2]=document.getElementById("text-box3").value;
+		if(num==3)return ;
+		number[3]=document.getElementById("text-box4").value;
+		if(num==4)return ;
+		number[4]=document.getElementById("text-box5").value;
+		if(num==5)return ;
+}
+
+function getnum2(){	
+		flag=1;
+		p=0;
+		step=0;
+		num = document.getElementById("text-box0").value;
+		number[0]=document.getElementById("text-box6").value;
+		if(num==1)return ;
+		number[1]=document.getElementById("text-box7").value;
+		if(num==2)return ;
+		number[2]=document.getElementById("text-box8").value;
+		if(num==3)return ;
+		number[3]=document.getElementById("text-box9").value;
+		if(num==4)return ;
+		number[4]=document.getElementById("text-box10").value;
+		if(num==5)return ;
+	
+}
+
+function main2(){
+	document.getElementById("canvas").style.display="block";
+	var map = document.getElementById("canvas");
+	var i,j;
+	map.width = 95*num;
+    map.height = 95*num;
+        if(map.getContext){
+            var c = map.getContext("2d");
+       		var w=map.width;
+            var h = map.height;
+            c.lineWidth = 2;
+            for(i = 0; i <= num; i++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(0,i*95);
+                c.lineTo(w,i*95);
+                c.stroke();
+            }
+            for(j = 0; j <= num; j++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(j*95, 0);
+                c.lineTo(j*95, h);
+                c.stroke();
+            }
+			for(i = 0; i < num; i++ ){
+				for(j = 0; j < num; j++ ){
+					c.font = 'bold 30px 黑体';
+					c.textAlign = "center";
+					c.textBaseline = "middle";
+					c.fillStyle = "#FFF";
+					c.fillText(number[i], i*95+48,j*95+48);
+				}
+			}
+		}
+	var pp;
+	for(pp=0;pp<num;++pp)
+	{
+		tb[pp]=0;
+	}
+	fun2(0);
+}
+
+function fun2(row)
+{
+    var col,i;
+    for(col=0;col<num;++col)
+    {
+        if(tb[col])
+            continue;
+        tb[col]=1;
+		n[row]=number[col];
+		step++;
+		mark3[step]=1;
+		mark4[step]=row;
+		mark5[step]=col;
+        if(row==num-1)
+        {
+			for(i=0;i<num;i++){
+				var r=document.getElementById("test2");
+				var node=document.createTextNode(n[i]);
+				r.appendChild(node);
+			}
+			var node2=document.createTextNode(' ');
+			r.appendChild(node2);
+        }
+        else
+        {
+            fun2(row+1);
+        }
+        tb[col]=0;
+		step++;
+		mark3[step]=0;
+		mark4[step]=row;
+		mark5[step]=col;
+    }
+}
+
+function change2()  
+{  
+    p++;
+	document.getElementById("stage2").innerHTML=p;
+	var r,l,q,qq;
+	r=mark4[p];
+	l=mark5[p];
+	if(mark3[p]==1)
+	{
+		var map = document.getElementById("canvas");
+		var i,j;
+		map.width = 95*num;
+		map.height = 95*num;
+        if(map.getContext){
+            var c = map.getContext("2d");
+       		var w = map.width;
+            var h = map.height;
+            c.lineWidth = 2;
+			for(i = 0; i <= num; i++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(0,i*95);
+                c.lineTo(w,i*95);
+                c.stroke();
+            }
+            for(j = 0; j <= num; j++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(j*95, 0);
+                c.lineTo(j*95, h);
+                c.stroke();
+            }
+			for(i = 0; i < num; i++ ){
+				for(j = 0; j < num; j++ ){
+					c.font = 'bold 30px 黑体';
+					c.textAlign = "center";
+					c.textBaseline = "middle";
+					c.fillStyle = "#666";
+					c.fillText(number[i], i*95+48,j*95+48);
+				}
+			}
+			for(q=0;q<num;++q)
+			{
+				for(qq=0;qq<num;++qq)
+				{
+					if(q==r&&qq==l)////此处填数字
+					{
+						c.font = 'bold 30px 黑体';
+						c.textAlign = "center";
+						c.textBaseline = "middle";
+						c.fillStyle = "#FFF";
+						c.fillText(number[l], l*95+48,r*95+48);
+						pos[q][qq]=-1;
+					}
+					else if(q!=r&&qq!=l)
+					{
+						if(pos[q][qq]>0)//打过叉的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+							c.strokeStyle = "#AAA";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+						}
+						else if(pos[q][qq]==-1)//填过数字的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#FFF";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+						}
+					}
+					else
+					{
+						pos[q][qq]++;
+						c.font = 'bold 30px 黑体';
+						c.textAlign = "center";
+						c.textBaseline = "middle";
+						c.fillStyle = "#666";
+						c.fillText(number[qq], qq*95+48,q*95+48);
+						c.strokeStyle = "#AAA";
+						c.beginPath();
+						c.moveTo(95*qq,95*q);
+						c.lineTo(95*(qq+1),95*(q+1));
+						c.stroke();
+						c.fill();
+						c.moveTo(95*(qq+1),95*q);
+						c.lineTo(95*qq,95*(q+1));
+						c.stroke();
+						c.fill();
+					}
+				}
+			}		
+		}	
+		
+	}
+	else if(mark3[p]==0)
+	{	
+		var map = document.getElementById("canvas");
+		var i,j;
+		map.width = 95*num;
+		map.height = 95*num;
+        if(map.getContext){
+            var c = map.getContext("2d");
+       		var w = map.width;
+            var h = map.height;
+            c.lineWidth = 2;
+			for(i = 0; i <= num; i++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(0,i*95);
+                c.lineTo(w,i*95);
+                c.stroke();
+            }
+            for(j = 0; j <= num; j++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(j*95, 0);
+                c.lineTo(j*95, h);
+                c.stroke();
+            }
+			for(i = 0; i < num; i++ ){
+				for(j = 0; j < num; j++ ){
+					c.font = 'bold 30px 黑体';
+					c.textAlign = "center";
+					c.textBaseline = "middle";
+					c.fillStyle = "#666";
+					c.fillText(number[i], i*95+48,j*95+48);
+				}
+			}
+			for(q=0;q<num;++q)
+			{
+				for(qq=0;qq<num;++qq)
+				{
+					if(q==r&&qq==l)//此处删数字
+					{
+						c.font = 'bold 30px 黑体';
+						c.textAlign = "center";
+						c.textBaseline = "middle";
+						c.fillStyle = "#666";
+						c.fillText(number[qq], qq*95+48,q*95+48);
+						pos[q][qq]=0;//表示此处未填数字
+					}
+					else if(q!=r&&qq!=l)
+					{
+						if(pos[q][qq]>0)//打过叉的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+							c.strokeStyle = "#AAA";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+						}
+						else if(pos[q][qq]==-1)//填过数字的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#FFF";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+						}
+						else if(pos[q][qq]==0)
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+						}
+					}
+					else//
+					{
+						pos[q][qq]--;
+						if(pos[q][qq]==0)
+						{
+							c.strokeStyle = "#333";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);							
+						}
+						else if(pos[q][qq]>0)
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+							c.strokeStyle = "#AAA";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+						}
+					}
+				}
+			}
+		}	
+	}
+	if(p<step)
+		time2=setTimeout("change2()",t);
+} 
+
+function next2()  
+{  
+    p++;
+	document.getElementById("stage2").innerHTML=p;
+	var r,l,q,qq;
+	r=mark4[p];
+	l=mark5[p];
+	if(mark3[p]==1)
+	{
+		var map = document.getElementById("canvas");
+		var i,j;
+		map.width = 95*num;
+		map.height = 95*num;
+        if(map.getContext){
+            var c = map.getContext("2d");
+       		var w = map.width;
+            var h = map.height;
+            c.lineWidth = 2;
+			for(i = 0; i <= num; i++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(0,i*95);
+                c.lineTo(w,i*95);
+                c.stroke();
+            }
+            for(j = 0; j <= num; j++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(j*95, 0);
+                c.lineTo(j*95, h);
+                c.stroke();
+            }
+			for(i = 0; i < num; i++ ){
+				for(j = 0; j < num; j++ ){
+					c.font = 'bold 30px 黑体';
+					c.textAlign = "center";
+					c.textBaseline = "middle";
+					c.fillStyle = "#666";
+					c.fillText(number[i], i*95+48,j*95+48);
+				}
+			}
+			for(q=0;q<num;++q)
+			{
+				for(qq=0;qq<num;++qq)
+				{
+					if(q==r&&qq==l)////此处填数字
+					{
+						c.font = 'bold 30px 黑体';
+						c.textAlign = "center";
+						c.textBaseline = "middle";
+						c.fillStyle = "#FFF";
+						c.fillText(number[l], l*95+48,r*95+48);
+						pos[q][qq]=-1;
+					}
+					else if(q!=r&&qq!=l)
+					{
+						if(pos[q][qq]>0)//打过叉的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+							c.strokeStyle = "#AAA";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+						}
+						else if(pos[q][qq]==-1)//填过数字的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#FFF";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+						}
+					}
+					else
+					{
+						pos[q][qq]++;
+						c.font = 'bold 30px 黑体';
+						c.textAlign = "center";
+						c.textBaseline = "middle";
+						c.fillStyle = "#666";
+						c.fillText(number[qq], qq*95+48,q*95+48);
+						c.strokeStyle = "#AAA";
+						c.beginPath();
+						c.moveTo(95*qq,95*q);
+						c.lineTo(95*(qq+1),95*(q+1));
+						c.stroke();
+						c.fill();
+						c.moveTo(95*(qq+1),95*q);
+						c.lineTo(95*qq,95*(q+1));
+						c.stroke();
+						c.fill();
+					}
+				}
+			}		
+		}	
+		
+	}
+	else if(mark3[p]==0)
+	{	
+		var map = document.getElementById("canvas");
+		var i,j;
+		map.width = 95*num;
+		map.height = 95*num;
+        if(map.getContext){
+            var c = map.getContext("2d");
+       		var w = map.width;
+            var h = map.height;
+            c.lineWidth = 2;
+			for(i = 0; i <= num; i++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(0,i*95);
+                c.lineTo(w,i*95);
+                c.stroke();
+            }
+            for(j = 0; j <= num; j++ ){
+                c.strokeStyle = "#AAA";
+                c.beginPath();
+                c.moveTo(j*95, 0);
+                c.lineTo(j*95, h);
+                c.stroke();
+            }
+			for(i = 0; i < num; i++ ){
+				for(j = 0; j < num; j++ ){
+					c.font = 'bold 30px 黑体';
+					c.textAlign = "center";
+					c.textBaseline = "middle";
+					c.fillStyle = "#666";
+					c.fillText(number[i], i*95+48,j*95+48);
+				}
+			}
+			for(q=0;q<num;++q)
+			{
+				for(qq=0;qq<num;++qq)
+				{
+					if(q==r&&qq==l)//此处删数字
+					{
+						c.font = 'bold 30px 黑体';
+						c.textAlign = "center";
+						c.textBaseline = "middle";
+						c.fillStyle = "#666";
+						c.fillText(number[qq], qq*95+48,q*95+48);
+						pos[q][qq]=0;//表示此处未填数字
+					}
+					else if(q!=r&&qq!=l)
+					{
+						if(pos[q][qq]>0)//打过叉的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+							c.strokeStyle = "#AAA";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+						}
+						else if(pos[q][qq]==-1)//填过数字的位置
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#FFF";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+						}
+						else if(pos[q][qq]==0)
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+						}
+					}
+					else//
+					{
+						pos[q][qq]--;
+						if(pos[q][qq]==0)
+						{
+							c.strokeStyle = "#333";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);							
+						}
+						else if(pos[q][qq]>0)
+						{
+							c.font = 'bold 30px 黑体';
+							c.textAlign = "center";
+							c.textBaseline = "middle";
+							c.fillStyle = "#666";
+							c.fillText(number[qq], qq*95+48,q*95+48);
+							c.strokeStyle = "#AAA";
+							c.beginPath();
+							c.moveTo(95*qq,95*q);
+							c.lineTo(95*(qq+1),95*(q+1));
+							c.stroke();
+							c.fill();
+							c.moveTo(95*(qq+1),95*q);
+							c.lineTo(95*qq,95*(q+1));
+							c.stroke();
+							c.fill();
+						}
+					}
+				}
+			}
+		}	
+	}
+} 
+</script>
+
+<p id="can">
+<canvas id="canvas" width="100" height="800" style="display:none">
+	Your browser does not support the canvas element.
+</canvas></p>
+
+</div>
+
+</body>
+</html>
